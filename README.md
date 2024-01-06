@@ -1,18 +1,12 @@
 # BookingApp
 
----
-
 Simple API for Booking management
 
 # Dependencies
 
----
-
 - .NET8
 
 # How to Run 
-
----
 
 If you don't have .Net download from  [.NET](https://dotnet.microsoft.com/en-us/download)
 
@@ -41,8 +35,6 @@ dotnet watch run
 ~~~
 
 # How to run in Docker
-
----
 
 coming soon
 
