@@ -760,4 +760,6 @@ FodyWeavers.xsd
 
 src/obj/
 src/bin/
+src/Properties/launchSettings.json
+src/appsettings.Development.json
 
