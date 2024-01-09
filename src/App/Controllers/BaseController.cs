@@ -4,6 +4,6 @@ namespace BookingApp.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class BaseController : Controller
+public abstract class BaseController : ControllerBase
 {
 }

@@ -13,7 +13,32 @@ public static class UserMappings
             LastName = userCreateRequest.LastName,
             NickName = userCreateRequest.NickName,
             Dni = userCreateRequest.Dni,
-            Password = userCreateRequest.Password
+            Age = userCreateRequest.Age
+        };
+        return map;
+    }
+
+    public static UserGetRequest? ToUserGetRequest(this User user)
+    {
+        var map = new UserGetRequest
+        {
+            Name = user.Name,
+            LastName = user.LastName,
+            NickName = user.NickName,
+            Dni = user.Dni,
+            Age = user.Age
+        };
+        return map;
+    }
+
+    public static UserUpdateRequest? ToUserUpdateRequest(this User user)
+    {
+        var map = new UserUpdateRequest
+        {
+            Name = user.Name,
+            LastName = user.LastName,
+            NickName = user.NickName,
+            Age = user.Age
         };
         return map;
     }
