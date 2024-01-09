@@ -1,3 +1,6 @@
+using Domain.Interfaces;
+using Infrastructure.Context;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +12,8 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration["ConnectionString"] ??
                        builder.Configuration.GetConnectionString("Postgres");
 
-builder.Services.AddDbContext<DbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddScoped<IUserServices, UserServices>();
 
 
 var app = builder.Build();
