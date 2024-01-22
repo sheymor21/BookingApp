@@ -5,6 +5,7 @@ Simple API for Booking management
 # Dependencies
 
 - .NET8
+- PostgresDb
 
 # How to Run 
 
