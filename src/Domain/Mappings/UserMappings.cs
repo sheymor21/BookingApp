@@ -13,7 +13,8 @@ public static class UserMappings
             LastName = userCreateRequest.LastName,
             NickName = userCreateRequest.NickName,
             Dni = userCreateRequest.Dni,
-            Age = userCreateRequest.Age
+            Age = userCreateRequest.Age,
+            Email = userCreateRequest.Email
         };
         return map;
     }
@@ -23,10 +24,11 @@ public static class UserMappings
         var map = new UserGetRequest
         {
             Name = user.Name,
-            LastName = user.LastName,
-            NickName = user.NickName,
+            LastName = user.LastName!,
+            NickName = user.NickName!,
             Dni = user.Dni,
-            Age = user.Age
+            Age = user.Age,
+            Email = user.Email!
         };
         return map;
     }
@@ -36,9 +38,10 @@ public static class UserMappings
         var map = new UserUpdateRequest
         {
             Name = user.Name,
-            LastName = user.LastName,
-            NickName = user.NickName,
-            Age = user.Age
+            LastName = user.LastName!,
+            NickName = user.NickName!,
+            Age = user.Age,
+            Email = user.Email!
         };
         return map;
     }
