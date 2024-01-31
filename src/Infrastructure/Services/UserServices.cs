@@ -44,6 +44,7 @@ public class UserServices : IUserServices
         user.LastName = userUpdateRequest.LastName;
         user.Age = userUpdateRequest.Age;
         user.NickName = userUpdateRequest.NickName;
+        user.Email = userUpdateRequest.Email;
         await _databaseContext.SaveChangesAsync();
         return user.ToUserUpdateRequest();
     }

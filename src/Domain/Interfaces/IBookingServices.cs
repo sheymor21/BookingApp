@@ -4,6 +4,7 @@ namespace Domain.Interfaces;
 
 public interface IBookingServices
 {
-    Task AddBooking(BookingCreateRequest bookingCreateRequest);
-    Task<List<BookingGetRequest>> GetBooking(string email);
+    Task<List<BookingGetRequest>> GetBookingAsync(string email);
+    Task AddBookingAsync(BookingCreateRequest bookingCreateRequest);
+    Task CancelBookingAsync(Guid bookingId, string email);
 }

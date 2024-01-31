@@ -1,20 +1,25 @@
 ﻿using Domain.DTO.Bookings;
 using Domain.Models.BookingModels;
+using Domain.Models.UserModels;
 
 namespace Domain.Mappings;
 
 public static class BookingMappings
 {
-    public static Booking ToBooking(this BookingCreateRequest bookingCreateRequest, BookingUserStatus user)
+    public static Booking ToBooking(this BookingCreateRequest bookingCreateRequest, IEnumerable<BookingUserStatus> invitedUsers,User user )
     {
         var map = new Booking
         {
             StartDate = bookingCreateRequest.StartDate.ToUniversalTime(),
             EndDate = bookingCreateRequest.EndDate.ToUniversalTime(),
-            OwnerMail = bookingCreateRequest.OwnerMail,
-            Cancelled = false
+            Cancelled = false,
+            User = user
         };
-        map.BookingUserStatus.Add(user);
+        foreach (var item in invitedUsers)
+        {
+            map.BookingUserStatus.Add(item);
+        }
+
         return map;
     }
 
@@ -36,7 +41,7 @@ public static class BookingMappings
             {
                 invitedMap.Cancelled = false;
             }
-            
+
             invites.Add(invitedMap);
         }
 
@@ -44,7 +49,8 @@ public static class BookingMappings
         {
             StartDate = booking.StartDate.ToUniversalTime(),
             EndDate = booking.EndDate.ToUniversalTime(),
-            OwnerMail = booking.OwnerMail,
+            OwnerMail = booking.User.Email,
+            OwnerName = booking.User.Name + booking.User.LastName,
             BookingId = booking.BookingId,
             Invited = invites
         };

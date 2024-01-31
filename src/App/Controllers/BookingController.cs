@@ -23,7 +23,7 @@ public class BookingController : BaseController
     [HttpPost("")]
     public async Task<ActionResult> AddBooking(BookingCreateRequest bookingCreateRequest)
     {
-        await _bookingServices.AddBooking(bookingCreateRequest);
+        await _bookingServices.AddBookingAsync(bookingCreateRequest);
         return Ok();
     }
 
@@ -35,7 +35,20 @@ public class BookingController : BaseController
     [HttpGet("")]
     public async Task<ActionResult> GetBookings(string email)
     {
-        var result = await _bookingServices.GetBooking(email);
+        var result = await _bookingServices.GetBookingAsync(email);
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Cancels a booking for the specified email and booking ID.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking to cancel.</param>
+    /// <param name="email">The email address of the user canceling the booking.</param>
+    /// <returns>An ActionResult representing the result of the operation.</returns>
+    [HttpPut("")]
+    public async Task<ActionResult> CancelBooking(Guid bookingId, string email)
+    {
+        await _bookingServices.CancelBookingAsync(bookingId, email);
+        return Ok();
     }
 }
