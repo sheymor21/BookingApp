@@ -1,0 +1,47 @@
+﻿@userDni=123456789
+
+### POST UserCreate
+
+POST {{HOST}}/User
+Content-Type: application/json
+
+{
+  "name": "jose",
+  "lastName": "armando",
+  "nickName": "sheymor",
+  "email": "ejemplo@ejemplo",
+  "age": 23,
+  "dni": {{userDni}}
+}
+
+### POST UserCreate 2
+
+POST {{HOST}}/User
+Content-Type: application/json
+
+{
+  "name": "fami",
+  "lastName": "tamala",
+  "nickName": "coral",
+  "email": "ejemplo2@ejemplo",
+  "age": 24,
+  "dni": 9876543210
+}
+
+### Get User by Id
+
+GET {{HOST}}/User?userDni={{userDni}}
+Accept: application/json
+
+### Put User
+
+PUT {{HOST}}/User?userDni={{userDni}}
+Content-Type: application/json
+
+{
+  "name": "Manuel",
+  "lastName": "Alejandro",
+  "nickName": "Calva",
+  "email": "nuevo@ejemplo",
+  "age": 24
+}
