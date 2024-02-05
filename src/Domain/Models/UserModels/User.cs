@@ -13,4 +13,5 @@ public class User
     public int Age { get; set; }
 
     public List<BookingUserStatus>? BookingsStatus { get; set; } = new();
+    public List<Booking>? Bookings { get; set; } = new();
 }

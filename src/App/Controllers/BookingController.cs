@@ -45,10 +45,23 @@ public class BookingController : BaseController
     /// <param name="bookingId">The ID of the booking to cancel.</param>
     /// <param name="email">The email address of the user canceling the booking.</param>
     /// <returns>An ActionResult representing the result of the operation.</returns>
-    [HttpPut("")]
+    [HttpPut("Cancel")]
     public async Task<ActionResult> CancelBooking(Guid bookingId, string email)
     {
         await _bookingServices.CancelBookingAsync(bookingId, email);
+        return Ok();
+    }
+
+    /// <summary>
+    /// Updates a booking with the specified booking ID and new booking details.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking to update.</param>
+    /// <param name="bookingUpdateRequest">The updated booking details.</param>
+    /// <returns>An ActionResult representing the result of the operation.</returns>
+    [HttpPut("")]
+    public async Task<ActionResult> UpdateBookings(Guid bookingId, BookingUpdateRequest bookingUpdateRequest)
+    {
+        await _bookingServices.UpdateBookingAsync(bookingId,bookingUpdateRequest);
         return Ok();
     }
 }

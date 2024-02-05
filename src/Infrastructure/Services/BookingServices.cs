@@ -38,6 +38,43 @@ public class BookingServices : IBookingServices
         await _databaseContext.SaveChangesAsync();
     }
 
+    public async Task UpdateBookingAsync(Guid bookingId, BookingUpdateRequest bookingUpdateRequest)
+    {
+        var booking = await _databaseContext.Bookings
+            .Include(x => x.BookingUserStatus)
+            .FirstAsync(w => w.BookingId == bookingId);
+
+
+        if (bookingUpdateRequest.NewInviteds != null)
+        {
+            foreach (var newInvited in bookingUpdateRequest.NewInviteds)
+            {
+                var invitedUser = await _databaseContext.Users.FirstAsync(w => w.Email == newInvited);
+                var bookingUserStatus = new BookingUserStatus { Accepted = false, User = invitedUser };
+                booking.BookingUserStatus.Add(bookingUserStatus);
+            }
+        }
+
+        if (bookingUpdateRequest.DeleteInviteds != null)
+        {
+            foreach (var deleteInvited in bookingUpdateRequest.DeleteInviteds)
+            {
+                var invitedUser = await _databaseContext.Users
+                    .Include(x => x.BookingsStatus!.Where(w => w.BookingId == bookingId))
+                    .FirstAsync(w => w.Email == deleteInvited);
+
+                if (invitedUser.BookingsStatus != null)
+                {
+                    booking.BookingUserStatus.Remove(invitedUser.BookingsStatus[0]);
+                }
+            }
+        }
+
+        booking.StartDate = bookingUpdateRequest.StartDate;
+        booking.EndDate = bookingUpdateRequest.EndDate;
+        await _databaseContext.SaveChangesAsync();
+    }
+
     public async Task<List<BookingGetRequest>> GetBookingAsync(string email)
     {
         List<BookingGetRequest> bookingGetRequests = new();
@@ -76,6 +113,39 @@ public class BookingServices : IBookingServices
         }
 
         return bookingGetRequests;
+    }
+
+    public async Task CancelBookingAsync(Guid bookingId, string email)
+    {
+        var booking = await _databaseContext.Bookings
+            .Include(x => x.User)
+            .FirstAsync(w => w.BookingId == bookingId);
+        if (booking!.User.Email == email)
+        {
+            booking.Cancelled = true;
+            await _databaseContext.SaveChangesAsync();
+        }
+        else
+        {
+            var user = await _databaseContext.Users
+                .Where(w => w.Email == email)
+                .Select(user => new
+                {
+                    userId = user.UserId,
+                    email = user.Email
+                }).FirstAsync();
+
+            var bookingUserStatus = await _databaseContext.BookingUserStatus.FirstAsync(x =>
+                x.BookingId == bookingId && x.UserId == user.userId);
+
+            var bookingCancelled = new BookingCancelled
+            {
+                Reason = "Cancelled by user",
+                BookingUserStatus = bookingUserStatus
+            };
+            await _databaseContext.BookingCancelleds.AddAsync(bookingCancelled);
+            await _databaseContext.SaveChangesAsync();
+        }
     }
 
     private async Task<List<Invited>> GetInvitedAsync(Guid bookingId)
@@ -143,39 +213,6 @@ public class BookingServices : IBookingServices
 
             booking.Invited = await GetInvitedAsync(item.BookingId);
             yield return booking;
-        }
-    }
-
-    public async Task CancelBookingAsync(Guid bookingId, string email)
-    {
-        var booking = await _databaseContext.Bookings
-            .Include(x => x.User)
-            .FirstAsync(w => w.BookingId == bookingId);
-        if (booking!.User.Email == email)
-        {
-            booking.Cancelled = true;
-            await _databaseContext.SaveChangesAsync();
-        }
-        else
-        {
-            var user = await _databaseContext.Users
-                .Where(w => w.Email == email)
-                .Select(user => new
-                {
-                    userId = user.UserId,
-                    email = user.Email
-                }).FirstAsync();
-
-            var bookingUserStatus = await _databaseContext.BookingUserStatus.FirstAsync(x =>
-                x.BookingId == bookingId && x.UserId == user.userId);
-
-            var bookingCancelled = new BookingCancelled
-            {
-                Reason = "Cancelled by user",
-                BookingUserStatus = bookingUserStatus
-            };
-            await _databaseContext.BookingCancelleds.AddAsync(bookingCancelled);
-            await _databaseContext.SaveChangesAsync();
         }
     }
 }

@@ -24,6 +24,7 @@ public class DatabaseContext : DbContext
 
         modelBuilder.Entity<Booking>().HasMany(x => x.BookingUserStatus).WithOne(x => x.Booking);
         modelBuilder.Entity<User>().HasMany(x=>x.BookingsStatus).WithOne(x=>x.User);
+        modelBuilder.Entity<User>().HasMany(x=>x.Bookings).WithOne(x=>x.User);
 
         modelBuilder.Entity<BookingCancelled>().HasOne(x => x.BookingUserStatus).WithMany(x => x.BookingCancelleds);
     }
