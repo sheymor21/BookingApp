@@ -8,6 +8,7 @@ services:
       - '${APP_PORT}:8080'
     environment:
       ConnectionString: Server=Db;Port=${DB_PORT};Username=${DB_USER};Password=${DB_PASSWORD};Database=${DB_NAME}
+    restart: on-failure:3
     depends_on:
       database:
         condition: service_started
