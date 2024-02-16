@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json;
+using BookingApp.Settings;
 using Domain.Interfaces;
 using Infrastructure.Context;
 using Infrastructure.Services;
@@ -19,9 +20,7 @@ var connectionString = builder.Configuration["ConnectionString"] ??
                        builder.Configuration.GetConnectionString("Postgres");
 
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(connectionString));
-builder.Services.AddScoped<IUserServices, UserServices>();
-builder.Services.AddScoped<IBookingServices, BookingServices>();
-builder.Services.AddScoped<IDummyServices, DummyServices>();
+builder.Services.DepedencyInjection();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo

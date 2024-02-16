@@ -7,10 +7,12 @@ namespace BookingApp.Controllers;
 public class BookingController : BaseController
 {
     private readonly IBookingServices _bookingServices;
+    private readonly IValidatorManager _validatorManager;
 
-    public BookingController(IBookingServices bookingServices)
+    public BookingController(IBookingServices bookingServices, IValidatorManager validatorManager)
     {
         _bookingServices = bookingServices;
+        _validatorManager = validatorManager;
     }
 
     /// <summary>
@@ -23,6 +25,11 @@ public class BookingController : BaseController
     [HttpPost("")]
     public async Task<ActionResult> AddBooking(BookingCreateRequest bookingCreateRequest)
     {
+        var validationErrors =await _validatorManager.ValidateAsync(bookingCreateRequest);
+        if (validationErrors.Count > 0)
+        {
+            return BadRequest(validationErrors);
+        }
         await _bookingServices.AddBookingAsync(bookingCreateRequest);
         return Ok();
     }
@@ -61,6 +68,11 @@ public class BookingController : BaseController
     [HttpPut("")]
     public async Task<ActionResult> UpdateBookings(Guid bookingId, BookingUpdateRequest bookingUpdateRequest)
     {
+        var validationErrors = await _validatorManager.ValidateAsync(bookingUpdateRequest);
+        if (validationErrors.Count > 0)
+        {
+            return BadRequest(validationErrors);
+        }
         await _bookingServices.UpdateBookingAsync(bookingId,bookingUpdateRequest);
         return Ok();
     }

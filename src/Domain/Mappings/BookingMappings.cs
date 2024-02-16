@@ -22,38 +22,4 @@ public static class BookingMappings
 
         return map;
     }
-
-    public static BookingGetRequest ToBookingGetRequest(this Booking booking)
-    {
-        List<Invited> invites = new();
-        foreach (var item in booking.BookingUserStatus)
-        {
-            var invitedMap = new Invited
-            {
-                Email = item.User.Email,
-                Accepted = item.Accepted
-            };
-            if (item.BookingCancelleds.Count != 0)
-            {
-                invitedMap.Cancelled = true;
-            }
-            else
-            {
-                invitedMap.Cancelled = false;
-            }
-
-            invites.Add(invitedMap);
-        }
-
-        var map = new BookingGetRequest
-        {
-            StartDate = booking.StartDate.ToUniversalTime(),
-            EndDate = booking.EndDate.ToUniversalTime(),
-            OwnerMail = booking.User.Email,
-            OwnerName = booking.User.Name + booking.User.LastName,
-            BookingId = booking.BookingId,
-            Invited = invites
-        };
-        return map;
-    }
 }

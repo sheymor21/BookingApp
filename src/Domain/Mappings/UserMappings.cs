@@ -9,7 +9,7 @@ public static class UserMappings
     {
         var map = new User
         {
-            Name = userCreateRequest.Name,
+            Name = userCreateRequest.FirstName,
             LastName = userCreateRequest.LastName,
             NickName = userCreateRequest.NickName,
             Dni = userCreateRequest.Dni,
@@ -23,7 +23,7 @@ public static class UserMappings
     {
         var map = new UserGetRequest
         {
-            Name = user.Name,
+            FirstName = user.Name,
             LastName = user.LastName!,
             NickName = user.NickName!,
             Dni = user.Dni,
@@ -37,7 +37,7 @@ public static class UserMappings
     {
         var map = new UserUpdateRequest
         {
-            Name = user.Name,
+            FirstName = user.Name,
             LastName = user.LastName!,
             NickName = user.NickName!,
             Age = user.Age,

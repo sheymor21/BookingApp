@@ -40,7 +40,7 @@ public class UserServices : IUserServices
             return null;
         }
 
-        user.Name = userUpdateRequest.Name;
+        user.Name = userUpdateRequest.FirstName;
         user.LastName = userUpdateRequest.LastName;
         user.Age = userUpdateRequest.Age;
         user.NickName = userUpdateRequest.NickName;

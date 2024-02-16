@@ -7,10 +7,12 @@ namespace BookingApp.Controllers;
 public class UserController : BaseController
 {
     private readonly IUserServices _userServices;
+    private readonly IValidatorManager _validatorManager;
 
-    public UserController(IUserServices userServices)
+    public UserController(IUserServices userServices, IValidatorManager validatorManager)
     {
         _userServices = userServices;
+        _validatorManager = validatorManager;
     }
 
     /// <summary>
@@ -21,6 +23,12 @@ public class UserController : BaseController
     [HttpPost("")]
     public async Task<ActionResult> AddUser(UserCreateRequest userCreateRequest)
     {
+        var validationErrors = await _validatorManager.ValidateAsync(userCreateRequest);
+        if (validationErrors.Count > 0)
+        {
+            return BadRequest(validationErrors);
+        }
+
         await _userServices.AddUser(userCreateRequest);
         return Ok();
     }
@@ -58,11 +66,18 @@ public class UserController : BaseController
     [HttpPut("")]
     public async Task<ActionResult> UpdateUser(long userDni, UserUpdateRequest userUpdateRequest)
     {
+        
+        var validationErrors = await _validatorManager.ValidateAsync(userUpdateRequest);
+        if (validationErrors.Count > 0)
+        {
+            return BadRequest(validationErrors);
+        }
         var result = await _userServices.UpdateUser(userDni, userUpdateRequest);
         if (result is not null)
         {
             return Ok(result);
         }
+
         return BadRequest();
     }
 }
