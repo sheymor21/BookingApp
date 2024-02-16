@@ -760,3 +760,4 @@ FodyWeavers.xsd
 
 !/src/App/appsettings.Development.json
 !/src/App/Properties/
+!/.env
