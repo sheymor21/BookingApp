@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json;
+using BookingApp.Configuration;
 using BookingApp.Settings;
 using Domain.Interfaces;
 using Infrastructure.Context;
@@ -51,6 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.Migrations();
 app.MapControllers();
 app.UseHttpsRedirection();
 
