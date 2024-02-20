@@ -44,10 +44,16 @@ public class UserController : BaseController
     [HttpGet("")]
     public async Task<ActionResult> GetUser(long userDni)
     {
-        var result = await _userServices.GetUserByDni(userDni);
-        if (result is not null)
+        var userDniExistence = await _validatorManager.ValidateUserDniAsync(userDni);
+        if (!userDniExistence)
         {
-            return Ok(result);
+            NotFound("The Dni doesn't exist");
+        }
+
+        var user = await _userServices.GetUserByDni(userDni);
+        if (user is not null)
+        {
+            return Ok(user);
         }
 
         return NotFound();
@@ -66,16 +72,16 @@ public class UserController : BaseController
     [HttpPut("")]
     public async Task<ActionResult> UpdateUser(long userDni, UserUpdateRequest userUpdateRequest)
     {
-        
         var validationErrors = await _validatorManager.ValidateAsync(userUpdateRequest);
         if (validationErrors.Count > 0)
         {
             return BadRequest(validationErrors);
         }
-        var result = await _userServices.UpdateUser(userDni, userUpdateRequest);
-        if (result is not null)
+
+        var updateUser = await _userServices.UpdateUser(userDni, userUpdateRequest);
+        if (updateUser is not null)
         {
-            return Ok(result);
+            return Ok(updateUser);
         }
 
         return BadRequest();

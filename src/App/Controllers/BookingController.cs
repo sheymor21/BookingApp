@@ -25,11 +25,12 @@ public class BookingController : BaseController
     [HttpPost("")]
     public async Task<ActionResult> AddBooking(BookingCreateRequest bookingCreateRequest)
     {
-        var validationErrors =await _validatorManager.ValidateAsync(bookingCreateRequest);
+        var validationErrors = await _validatorManager.ValidateAsync(bookingCreateRequest);
         if (validationErrors.Count > 0)
         {
             return BadRequest(validationErrors);
         }
+
         await _bookingServices.AddBookingAsync(bookingCreateRequest);
         return Ok();
     }
@@ -42,6 +43,11 @@ public class BookingController : BaseController
     [HttpGet("")]
     public async Task<ActionResult> GetBookings(string email)
     {
+        var emailExistence = await _validatorManager.ValidateUserEmailAsync(email);
+        if (!emailExistence)
+        {
+            return BadRequest("The email doesn't exist");
+        }
         var result = await _bookingServices.GetBookingAsync(email);
         return Ok(result);
     }
@@ -55,6 +61,12 @@ public class BookingController : BaseController
     [HttpPut("Cancel")]
     public async Task<ActionResult> CancelBooking(Guid bookingId, string email)
     {
+        var bookingExistence = await _validatorManager.ValidateUserDniAsync(bookingId);
+        if (bookingExistence)
+        {
+            return NotFound("Booking ID doesn't exist");
+        }
+
         await _bookingServices.CancelBookingAsync(bookingId, email);
         return Ok();
     }
@@ -68,12 +80,19 @@ public class BookingController : BaseController
     [HttpPut("")]
     public async Task<ActionResult> UpdateBookings(Guid bookingId, BookingUpdateRequest bookingUpdateRequest)
     {
+        var bookingExistence = await _validatorManager.ValidateUserDniAsync(bookingId);
+        if (!bookingExistence)
+        {
+            return NotFound("Booking ID doesn't exist");
+        }
+
         var validationErrors = await _validatorManager.ValidateAsync(bookingUpdateRequest);
         if (validationErrors.Count > 0)
         {
             return BadRequest(validationErrors);
         }
-        await _bookingServices.UpdateBookingAsync(bookingId,bookingUpdateRequest);
+
+        await _bookingServices.UpdateBookingAsync(bookingId, bookingUpdateRequest);
         return Ok();
     }
 }
