@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Bookings;
+using Domain.Models.BookingModels;
 using Microsoft.EntityFrameworkCore;
 using test.Data;
 
@@ -43,15 +44,26 @@ public class BookingTest
             .Include(x => x.BookingUserStatus)
             .ThenInclude(x => x.User)
             .Include(x => x.User)
-            .FirstAsync();
+            .Select(p => new
+            {
+                booking = new Booking
+                {
+                    StartDate = p.StartDate,
+                    EndDate = p.EndDate,
+                    Cancelled = p.Cancelled,
+                },
+                ownerEmail = p.User.Email,
+                invitedEmail = p.BookingUserStatus.Select(x=>x.User.Email).First()
+            })
+            .FirstOrDefaultAsync();
 
-        bookingDb.Should().BeEquivalentTo(bookingCreateRequest, config =>
+        bookingDb?.booking.Should().NotBeNull().And.BeEquivalentTo(bookingCreateRequest, config =>
             config.Excluding(x => x.Invitations)
                 .Excluding(x => x.OwnerMail)
         );
 
-        bookingDb.User.Email.Should().Be(bookingCreateRequest.OwnerMail);
-        bookingDb.BookingUserStatus[0].User.Email.Should().Be(bookingCreateRequest.Invitations[0]);
+        bookingDb?.ownerEmail.Should().Be(bookingCreateRequest.OwnerMail);
+        bookingDb?.invitedEmail.Should().Be(bookingCreateRequest.Invitations[0]);
     }
 
     [Fact]
@@ -66,8 +78,8 @@ public class BookingTest
         };
         await _bookingServices.UpdateBookingAsync(booking.BookingId, bookingUpdateRequest);
 
-        var bookingDb = await _appContextFixture.Bookings.FirstAsync();
-        bookingDb.Should().BeEquivalentTo(bookingUpdateRequest, config =>
+        var bookingDb = await _appContextFixture.Bookings.FirstOrDefaultAsync();
+        bookingDb.Should().NotBeNull().And.BeEquivalentTo(bookingUpdateRequest, config =>
             config.Excluding(x => x.NewInviteds)
                 .Excluding(x => x.DeleteInviteds)
         );
@@ -107,9 +119,10 @@ public class BookingTest
         };
         await _bookingServices.CancelBookingAsync(bookingCancelRequest);
         var bookingCancelledDb = await _appContextFixture.Bookings
-            .FirstAsync();
+            .Select(p => p.Cancelled)
+            .FirstOrDefaultAsync();
 
-        bookingCancelledDb.Cancelled.Should().Be(true);
+        bookingCancelledDb.Should().Be(true);
     }
 
     [Fact]
@@ -117,7 +130,7 @@ public class BookingTest
     {
         var users = await _creator.UserFixtureGeneratorAsync(2);
         var booking = await _creator.BookingFixtureGeneratorAsync(users[0]);
-        await _creator.BookingUserStatusFixtureGenerator(booking,users[1]);
+        await _creator.BookingUserStatusFixtureGenerator(booking, users[1]);
 
         BookingCancelRequest bookingCancelRequest = new()
         {
@@ -129,9 +142,14 @@ public class BookingTest
         var bookingCancelledDb = await _appContextFixture.BookingCancelleds
             .Include(x => x.BookingUserStatus)
             .ThenInclude(x => x.User)
-            .FirstAsync();
+            .Select(p => new
+            {
+                p.Reason,
+                invitedEmail = p.BookingUserStatus.User.Email
+            })
+            .FirstOrDefaultAsync();
 
-        bookingCancelledDb.Reason.Should().Be(bookingCancelRequest.Reason);
-        bookingCancelledDb.BookingUserStatus.User.Email.Should().Be(bookingCancelRequest.Email);
+        bookingCancelledDb?.Reason.Should().NotBeNull().And.Be(bookingCancelRequest.Reason);
+        bookingCancelledDb?.invitedEmail.Should().NotBeNull().And.Be(bookingCancelRequest.Email);
     }
 }

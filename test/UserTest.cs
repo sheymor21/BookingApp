@@ -31,7 +31,7 @@ public class UserTest
 
         UserCreateRequest userCreateRequest = new UserCreateRequest
         {
-            FirstName = user.Name,
+            FirstName = user.Name!,
             LastName = user.LastName!,
             NickName = user.NickName!,
             Email = user.Email!,
@@ -42,7 +42,7 @@ public class UserTest
         await _userServices.AddUserAsync(userCreateRequest);
 
         var dbUser = await _appContextFixture.Users.FirstOrDefaultAsync(w => w.Dni == userCreateRequest.Dni);
-        dbUser.Should().BeEquivalentTo(user, config => config.Excluding(x => x.UserId));
+        dbUser.Should().NotBeNull().And.BeEquivalentTo(user, config => config.Excluding(x => x.UserId));
     }
 
     [Fact]
