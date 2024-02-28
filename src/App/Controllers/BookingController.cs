@@ -48,6 +48,7 @@ public class BookingController : BaseController
         {
             return BadRequest("The email doesn't exist");
         }
+
         var result = await _bookingServices.GetBookingAsync(email);
         return Ok(result);
     }
@@ -60,10 +61,10 @@ public class BookingController : BaseController
     [HttpPut("Cancel")]
     public async Task<ActionResult> CancelBooking(BookingCancelRequest bookingCancelRequest)
     {
-        var bookingExistence = await _validatorManager.ValidateUserDniAsync(bookingCancelRequest.BookingId);
-        if (bookingExistence)
+        var validationsErrors = await _validatorManager.ValidateAsync(bookingCancelRequest);
+        if (validationsErrors.Count > 0)
         {
-            return NotFound("Booking ID doesn't exist");
+            return NotFound(validationsErrors);
         }
 
         await _bookingServices.CancelBookingAsync(bookingCancelRequest);

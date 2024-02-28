@@ -19,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<IValidator<UserUpdateRequest>, UserUpdateValidations>();
         services.AddScoped<IValidator<BookingCreateRequest>, BookingCreateValidations>();
         services.AddScoped<IValidator<BookingUpdateRequest>, BookingUpdateValidations>();
+        services.AddScoped<IValidator<BookingCancelRequest>, BookingCancelValidations>();
         return services;
     }
 }
