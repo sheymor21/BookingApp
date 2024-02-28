@@ -49,4 +49,16 @@ public class CreatorManager
 
         return booking;
     }
+
+    public async Task<BookingUserStatus> BookingUserStatusFixtureGenerator(Booking booking, User user)
+    {
+        BookingUserStatus bookingUserStatus = _fixture.Build<BookingUserStatus>()
+            .Without(x => x.BookingCancelleds)
+            .With(x => x.User, user)
+            .With(x => x.Booking, booking)
+            .Create();
+        await _appContextFixture.BookingUserStatus.AddAsync(bookingUserStatus);
+        await _appContextFixture.SaveChangesAsync();
+        return bookingUserStatus;
+    }
 }
