@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Context;
 
-public class DatabaseContext : DbContext
+public class DatabaseAppContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<BookingCancelled> BookingCancelleds { get; set; }
     public DbSet<BookingUserStatus> BookingUserStatus { get; set; }
 
-    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+    public DatabaseAppContext(DbContextOptions<DatabaseAppContext> options) : base(options)
     {
     }
 

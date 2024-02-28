@@ -10,12 +10,12 @@ namespace Infrastructure.Validations;
 public class ValidatorManger : IValidatorManager
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly DatabaseContext _databaseContext;
+    private readonly DatabaseAppContext _databaseAppContext;
 
-    public ValidatorManger(IServiceProvider serviceProvider, DatabaseContext databaseContext)
+    public ValidatorManger(IServiceProvider serviceProvider, DatabaseAppContext databaseAppContext)
     {
         _serviceProvider = serviceProvider;
-        _databaseContext = databaseContext;
+        _databaseAppContext = databaseAppContext;
     }
 
     public async Task<List<string>> ValidateAsync<T>(T objectToValidate)
@@ -38,18 +38,18 @@ public class ValidatorManger : IValidatorManager
 
     public async Task<bool> ValidateUserDniAsync(Guid bookingId)
     {
-        var existence = await _databaseContext.Bookings.AnyAsync(w => w.BookingId == bookingId);
+        var existence = await _databaseAppContext.Bookings.AnyAsync(w => w.BookingId == bookingId);
         return existence;
     }
     public async Task<bool> ValidateUserDniAsync(long userDni)
     {
-        var existence = await _databaseContext.Users.AnyAsync(w => w.Dni == userDni);
+        var existence = await _databaseAppContext.Users.AnyAsync(w => w.Dni == userDni);
         return existence;
     }
 
     public async Task<bool> ValidateUserEmailAsync(string email)
     {
-        var existence = await _databaseContext.Users.AnyAsync(w => w.Email == email);
+        var existence = await _databaseAppContext.Users.AnyAsync(w => w.Email == email);
         return existence;
     }
 }

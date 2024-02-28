@@ -4,7 +4,7 @@ namespace Domain.Interfaces;
 
 public interface IUserServices
 {
-    Task AddUser(UserCreateRequest userCreateRequest);
-    Task<UserGetRequest?> GetUserByDni(long userDni);
-    Task<UserUpdateRequest?> UpdateUser(long userDni, UserUpdateRequest userUpdateRequest);
+    Task AddUserAsync(UserCreateRequest userCreateRequest);
+    Task<UserGetRequest?> GetUserByDniAsync(long userDni);
+    Task<UserUpdateRequest?> UpdateUserAsync(long userDni, UserUpdateRequest userUpdateRequest);
 }

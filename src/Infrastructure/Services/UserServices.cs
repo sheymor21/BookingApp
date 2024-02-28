@@ -8,22 +8,22 @@ namespace Infrastructure.Services;
 
 public class UserServices : IUserServices
 {
-    private readonly DatabaseContext _databaseContext;
+    private readonly DatabaseAppContext _databaseAppContext;
 
-    public UserServices(DatabaseContext databaseContext)
+    public UserServices(DatabaseAppContext databaseAppContext)
     {
-        _databaseContext = databaseContext;
+        _databaseAppContext = databaseAppContext;
     }
 
-    public async Task AddUser(UserCreateRequest userCreateRequest)
+    public async Task AddUserAsync(UserCreateRequest userCreateRequest)
     {
-        await _databaseContext.Users.AddAsync(userCreateRequest.ToUser());
-        await _databaseContext.SaveChangesAsync();
+        await _databaseAppContext.Users.AddAsync(userCreateRequest.ToUser());
+        await _databaseAppContext.SaveChangesAsync();
     }
 
-    public async Task<UserGetRequest?> GetUserByDni(long userDni)
+    public async Task<UserGetRequest?> GetUserByDniAsync(long userDni)
     {
-        var user = await _databaseContext.Users.FirstOrDefaultAsync(w => w.Dni == userDni);
+        var user = await _databaseAppContext.Users.FirstOrDefaultAsync(w => w.Dni == userDni);
         if (user is not null)
         {
             return user.ToUserGetRequest();
@@ -32,9 +32,9 @@ public class UserServices : IUserServices
         return null;
     }
 
-    public async Task<UserUpdateRequest?> UpdateUser(long userDni, UserUpdateRequest userUpdateRequest)
+    public async Task<UserUpdateRequest?> UpdateUserAsync(long userDni, UserUpdateRequest userUpdateRequest)
     {
-        var user = await _databaseContext.Users.FirstOrDefaultAsync(w => w.Dni == userDni);
+        var user = await _databaseAppContext.Users.FirstOrDefaultAsync(w => w.Dni == userDni);
         if (user is null)
         {
             return null;
@@ -45,7 +45,7 @@ public class UserServices : IUserServices
         user.Age = userUpdateRequest.Age;
         user.NickName = userUpdateRequest.NickName;
         user.Email = userUpdateRequest.Email;
-        await _databaseContext.SaveChangesAsync();
+        await _databaseAppContext.SaveChangesAsync();
         return user.ToUserUpdateRequest();
     }
 }

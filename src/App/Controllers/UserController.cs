@@ -29,7 +29,7 @@ public class UserController : BaseController
             return BadRequest(validationErrors);
         }
 
-        await _userServices.AddUser(userCreateRequest);
+        await _userServices.AddUserAsync(userCreateRequest);
         return Ok();
     }
 
@@ -50,7 +50,7 @@ public class UserController : BaseController
             NotFound("The Dni doesn't exist");
         }
 
-        var user = await _userServices.GetUserByDni(userDni);
+        var user = await _userServices.GetUserByDniAsync(userDni);
         if (user is not null)
         {
             return Ok(user);
@@ -78,7 +78,7 @@ public class UserController : BaseController
             return BadRequest(validationErrors);
         }
 
-        var updateUser = await _userServices.UpdateUser(userDni, userUpdateRequest);
+        var updateUser = await _userServices.UpdateUserAsync(userDni, userUpdateRequest);
         if (updateUser is not null)
         {
             return Ok(updateUser);

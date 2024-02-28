@@ -20,7 +20,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration["ConnectionString"] ??
                        builder.Configuration.GetConnectionString("Postgres");
 
-builder.Services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<DatabaseAppContext>(options => options.UseNpgsql(connectionString));
 builder.Services.DepedencyInjection();
 builder.Services.AddSwaggerGen(c =>
 {

@@ -11,11 +11,11 @@ namespace Infrastructure.Services;
 
 public class DummyServices : IDummyServices
 {
-    private readonly DatabaseContext _databaseContext;
+    private readonly DatabaseAppContext _databaseAppContext;
 
-    public DummyServices(DatabaseContext databaseContext)
+    public DummyServices(DatabaseAppContext databaseAppContext)
     {
-        _databaseContext = databaseContext;
+        _databaseAppContext = databaseAppContext;
     }
 
     public async Task DummyConstructor(int quantity)
@@ -26,13 +26,13 @@ public class DummyServices : IDummyServices
             item.Bookings!.AddRange(SetBooking().Generate(quantity));
         }
 
-        await _databaseContext.Users.AddRangeAsync(fUser);
-        await _databaseContext.SaveChangesAsync();
+        await _databaseAppContext.Users.AddRangeAsync(fUser);
+        await _databaseAppContext.SaveChangesAsync();
     }
 
     public async IAsyncEnumerable<UserGetRequest> GetAllUser()
     {
-        var users = _databaseContext.Users.AsTracking().AsAsyncEnumerable();
+        var users = _databaseAppContext.Users.AsTracking().AsAsyncEnumerable();
         await foreach (var item in users)
         {
             yield return item.ToUserGetRequest()!;
