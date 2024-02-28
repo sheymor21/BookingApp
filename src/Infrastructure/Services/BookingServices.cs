@@ -159,7 +159,7 @@ public class BookingServices : IBookingServices
         {
             var cancelledStatus = await _databaseAppContext.BookingCancelleds
                 .AnyAsync(w => w.BookingUserStatusId == item.BookingUserStatusId);
-            var invited = new Invited()
+            var invited = new Invited
             {
                 Name = item.User.Name + item.User.LastName,
                 Accepted = item.Accepted,

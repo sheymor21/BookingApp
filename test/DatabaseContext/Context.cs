@@ -4,14 +4,14 @@ namespace test.DatabaseContext;
 
 public class DatabaseContextFixture
 {
-    public readonly Infrastructure.Context.DatabaseAppContext AppContext;
+    public readonly DatabaseAppContext AppContext;
 
     public DatabaseContextFixture()
     {
-        var builder = new DbContextOptionsBuilder<Infrastructure.Context.DatabaseAppContext>()
+        var builder = new DbContextOptionsBuilder<DatabaseAppContext>()
             .UseInMemoryDatabase("Database");
         var options = builder.Options;
-        AppContext = new Infrastructure.Context.DatabaseAppContext(options);
+        AppContext = new DatabaseAppContext(options);
         AppContext.Database.EnsureCreated();
         AppContext.Database.EnsureDeleted();
     }

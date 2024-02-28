@@ -2,9 +2,7 @@ using System.Reflection;
 using System.Text.Json;
 using BookingApp.Configuration;
 using BookingApp.Settings;
-using Domain.Interfaces;
 using Infrastructure.Context;
-using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 

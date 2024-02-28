@@ -4,10 +4,10 @@ namespace test.Data;
 
 public class CreatorManager
 {
-    private readonly Infrastructure.Context.DatabaseAppContext _appContextFixture;
+    private readonly DatabaseAppContext _appContextFixture;
     private readonly Fixture _fixture;
 
-    public CreatorManager(Infrastructure.Context.DatabaseAppContext appContextFixture, Fixture fixture)
+    public CreatorManager(DatabaseAppContext appContextFixture, Fixture fixture)
     {
         _appContextFixture = appContextFixture;
         _fixture = fixture;
