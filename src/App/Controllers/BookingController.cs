@@ -55,19 +55,18 @@ public class BookingController : BaseController
     /// <summary>
     /// Cancels a booking for the specified email and booking ID.
     /// </summary>
-    /// <param name="bookingId">The ID of the booking to cancel.</param>
-    /// <param name="email">The email address of the user canceling the booking.</param>
+    /// <param name="bookingCancelRequest">The booking cancellation request containing the booking ID, email and optional reason.</param>
     /// <returns>An ActionResult representing the result of the operation.</returns>
     [HttpPut("Cancel")]
-    public async Task<ActionResult> CancelBooking(Guid bookingId, string email)
+    public async Task<ActionResult> CancelBooking(BookingCancelRequest bookingCancelRequest)
     {
-        var bookingExistence = await _validatorManager.ValidateUserDniAsync(bookingId);
+        var bookingExistence = await _validatorManager.ValidateUserDniAsync(bookingCancelRequest.BookingId);
         if (bookingExistence)
         {
             return NotFound("Booking ID doesn't exist");
         }
 
-        await _bookingServices.CancelBookingAsync(bookingId, email);
+        await _bookingServices.CancelBookingAsync(bookingCancelRequest);
         return Ok();
     }
 

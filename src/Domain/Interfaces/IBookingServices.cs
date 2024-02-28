@@ -6,6 +6,6 @@ public interface IBookingServices
 {
     Task<List<BookingGetRequest>> GetBookingAsync(string email);
     Task AddBookingAsync(BookingCreateRequest bookingCreateRequest);
-    Task CancelBookingAsync(Guid bookingId, string email);
+    Task CancelBookingAsync(BookingCancelRequest bookingCancelRequest);
     Task UpdateBookingAsync(Guid bookingId, BookingUpdateRequest bookingUpdateRequest);
 }

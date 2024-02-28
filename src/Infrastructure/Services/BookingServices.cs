@@ -114,12 +114,12 @@ public class BookingServices : IBookingServices
         return bookingGetRequests;
     }
 
-    public async Task CancelBookingAsync(Guid bookingId, string email)
+    public async Task CancelBookingAsync(BookingCancelRequest bookingCancelRequest)
     {
         var booking = await _databaseAppContext.Bookings
             .Include(x => x.User)
-            .FirstAsync(w => w.BookingId == bookingId);
-        if (booking!.User.Email == email)
+            .FirstAsync(w => w.BookingId == bookingCancelRequest.BookingId);
+        if (booking!.User.Email == bookingCancelRequest.Email)
         {
             booking.Cancelled = true;
             await _databaseAppContext.SaveChangesAsync();
@@ -127,7 +127,7 @@ public class BookingServices : IBookingServices
         else
         {
             var user = await _databaseAppContext.Users
-                .Where(w => w.Email == email)
+                .Where(w => w.Email == bookingCancelRequest.Email)
                 .Select(user => new
                 {
                     userId = user.UserId,
@@ -135,13 +135,22 @@ public class BookingServices : IBookingServices
                 }).FirstAsync();
 
             var bookingUserStatus = await _databaseAppContext.BookingUserStatus.FirstAsync(x =>
-                x.BookingId == bookingId && x.UserId == user.userId);
+                x.BookingId == bookingCancelRequest.BookingId && x.UserId == user.userId);
 
             var bookingCancelled = new BookingCancelled
             {
-                Reason = "Cancelled by user",
                 BookingUserStatus = bookingUserStatus
             };
+            
+            if (bookingCancelRequest.Reason is null || bookingCancelRequest.Reason.Trim() == string.Empty)
+            {
+                bookingCancelled.Reason = "Cancelled by user";
+            }
+            else
+            {
+                bookingCancelled.Reason = bookingCancelRequest.Reason;
+            }
+
             await _databaseAppContext.BookingCancelleds.AddAsync(bookingCancelled);
             await _databaseAppContext.SaveChangesAsync();
         }
