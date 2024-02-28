@@ -41,7 +41,6 @@ public class BookingServices : IBookingServices
     public async Task UpdateBookingAsync(Guid bookingId, BookingUpdateRequest bookingUpdateRequest)
     {
         var booking = await _databaseAppContext.Bookings
-            .Include(x => x.BookingUserStatus)
             .FirstAsync(w => w.BookingId == bookingId);
 
 

@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+﻿using Domain.Models.BookingModels;
 
 namespace test.Data;
 
@@ -13,14 +13,40 @@ public class CreatorManager
         _fixture = fixture;
     }
 
-    public async Task<User> UserFixtureGenerator()
+    public async Task<User> UserFixtureGeneratorAsync()
     {
         User user = _fixture.Build<User>()
-            .Without(x=>x.Bookings)
-            .Without(x=>x.BookingsStatus)
+            .Without(x => x.Bookings)
+            .Without(x => x.BookingsStatus)
             .Create();
         await _appContextFixture.Users.AddAsync(user);
         await _appContextFixture.SaveChangesAsync();
+
         return user;
+    }
+
+    public async Task<List<User>> UserFixtureGeneratorAsync(int quantity)
+    {
+        IEnumerable<User> users = _fixture.Build<User>()
+            .Without(x => x.Bookings)
+            .Without(x => x.BookingsStatus)
+            .CreateMany(quantity);
+        var userList = users.ToList();
+        await _appContextFixture.Users.AddRangeAsync(userList);
+        await _appContextFixture.SaveChangesAsync();
+
+        return userList;
+    }
+
+    public async Task<Booking> BookingFixtureGeneratorAsync(User user)
+    {
+        Booking booking = _fixture.Build<Booking>()
+            .With(x => x.User, user)
+            .Without(x => x.BookingUserStatus)
+            .Create();
+        await _appContextFixture.Bookings.AddAsync(booking);
+        await _appContextFixture.SaveChangesAsync();
+
+        return booking;
     }
 }

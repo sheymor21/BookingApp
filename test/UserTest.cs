@@ -1,5 +1,4 @@
-﻿using AutoFixture;
-using Domain.DTO.Users;
+﻿using Domain.DTO.Users;
 using Domain.Mappings;
 using Microsoft.EntityFrameworkCore;
 using test.Data;
@@ -49,7 +48,7 @@ public class UserTest
     [Fact]
     public async Task UserUpdateAsyncTest()
     {
-        var user = await _creator.UserFixtureGenerator();
+        var user = await _creator.UserFixtureGeneratorAsync();
         var userUpdateRequest = user.ToUserUpdateRequest();
         userUpdateRequest!.FirstName = _fixture.Create<string>();
         userUpdateRequest.LastName = _fixture.Create<string>();
@@ -67,7 +66,7 @@ public class UserTest
     [Fact]
     public async Task UserGetAsyncTest()
     {
-        var user = await _creator.UserFixtureGenerator();
+        var user = await _creator.UserFixtureGeneratorAsync();
         var userDto = await _userServices.GetUserByDniAsync(user.Dni);
         userDto.Should().BeEquivalentTo(user, config =>
             config.WithMapping<UserGetRequest>(s => s.Name, t => t.FirstName)
