@@ -6,14 +6,14 @@ using test.Data;
 namespace test;
 
 [Collection("Database")]
-public class UserTest
+public class UserShould
 {
     private readonly UserServices _userServices;
     private readonly Fixture _fixture;
     private readonly CreatorManager _creator;
     private readonly DatabaseAppContext _appContextFixture;
 
-    public UserTest()
+    public UserShould()
     {
         _fixture = new Fixture();
         _appContextFixture = new DatabaseContextFixture().AppContext;
