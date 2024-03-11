@@ -8,6 +8,9 @@ Simple API for Booking management using .Net core and Docker
 - PostgresDb
 - FluentValidation
 - Bogus
+- FluentAssertions
+- Xunit
+- AutoFixture
 
 # How to Run
 
