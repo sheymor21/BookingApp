@@ -4,7 +4,7 @@ Simple API for Booking management using .Net core and Docker
 
 # Dependencies
 
-- .NET8
+- .NET core 8
 - PostgresDb
 - FluentValidation
 - Bogus
